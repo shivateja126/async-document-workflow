@@ -1,0 +1,2 @@
+filename,status,job_status,progress,title,category,summary,keywords,finalized
+sample-document.txt,completed,completed,100,Sample Document,Text,Simulated extraction for sample-document.txt.,"txt; text; simulated; structured-output; document-workflow",true

@@ -1,0 +1,23 @@
+{
+  "document": {
+    "filename": "sample-document.txt",
+    "status": "completed"
+  },
+  "job": {
+    "status": "completed",
+    "progress": 100
+  },
+  "extracted_data": {
+    "title": "Sample Document",
+    "category": "Text",
+    "summary": "Simulated extraction for sample-document.txt.",
+    "keywords": [
+      "txt",
+      "text",
+      "simulated",
+      "structured-output",
+      "document-workflow"
+    ],
+    "finalized": true
+  }
+}

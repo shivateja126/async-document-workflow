@@ -1,0 +1,96 @@
+services:
+  - type: keyvalue
+    name: shiva-project-redis
+    plan: free
+    maxmemoryPolicy: noeviction
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+
+  - type: web
+    runtime: docker
+    name: shiva-project-api
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health/live
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: ALLOWED_ORIGINS
+        value: https://shiva-project-frontend.onrender.com
+      - key: STORAGE_ROOT
+        value: /app/storage
+      - key: UPLOAD_MAX_SIZE_MB
+        value: 25
+      - key: ALLOWED_FILE_EXTENSIONS
+        value: pdf,txt,doc,docx,md,png,jpg,jpeg
+      - key: DATABASE_URL
+        fromDatabase:
+          name: shiva-project-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: shiva-project-redis
+          property: connectionString
+
+  - type: worker
+    runtime: docker
+    name: shiva-project-worker
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: ./scripts/start-worker.sh
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: CELERY_CONCURRENCY
+        value: 1
+      - key: STORAGE_ROOT
+        value: /app/storage
+      - key: UPLOAD_MAX_SIZE_MB
+        value: 25
+      - key: ALLOWED_FILE_EXTENSIONS
+        value: pdf,txt,doc,docx,md,png,jpg,jpeg
+      - key: DATABASE_URL
+        fromDatabase:
+          name: shiva-project-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: shiva-project-redis
+          property: connectionString
+
+  - type: web
+    runtime: docker
+    name: shiva-project-frontend
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NEXT_PUBLIC_API_BASE_URL
+        value: https://shiva-project-api.onrender.com
+      - key: NEXT_PUBLIC_WS_BASE_URL
+        value: wss://shiva-project-api.onrender.com
+
+databases:
+  - name: shiva-project-db
+    plan: free
+    databaseName: shiva_project
+    user: shiva_project_user
+    postgresMajorVersion: "16"
+

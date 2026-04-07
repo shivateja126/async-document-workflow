@@ -1,0 +1,11 @@
+node_modules
+.DS_Store
+.env
+.env.*
+.next
+.next*
+dist
+coverage
+backend/.turbo
+frontend/.turbo
+backend/prisma/dev.db

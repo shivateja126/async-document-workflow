@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master", "codex/**"]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: finance_platform
+          POSTGRES_USER: finance_user
+          POSTGRES_PASSWORD: finance_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U finance_user -d finance_platform"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Prisma generate
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://finance_user:finance_password@localhost:5432/finance_platform?schema=public
+        run: npx prisma generate
+
+      - name: Prisma migrate deploy
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://finance_user:finance_password@localhost:5432/finance_platform?schema=public
+        run: npx prisma migrate deploy
+
+      - name: Backend tests
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://finance_user:finance_password@localhost:5432/finance_platform?schema=public
+          JWT_SECRET: ci-secret
+        run: npm run test
+
+      - name: Backend build
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://finance_user:finance_password@localhost:5432/finance_platform?schema=public
+          JWT_SECRET: ci-secret
+        run: npm run build
+
+      - name: Frontend build
+        working-directory: frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:4000/api
+        run: npm run build

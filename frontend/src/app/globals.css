@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --shell: 243 238 226;
+  --panel: 255 251 245;
+  --panel-strong: 255 255 255;
+  --line: 166 150 126;
+  --accent: 25 124 114;
+  --accent-soft: 237 245 243;
+  --success: 28 152 112;
+  --danger: 198 73 57;
+  --warning: 201 137 35;
+  --app-bg: 11 15 25;
+  --app-bg-secondary: 17 24 39;
+  --app-surface: 17 25 40;
+  --app-surface-strong: 30 41 59;
+  --app-border: 255 255 255;
+  --app-text: 229 231 235;
+  --app-text-muted: 156 163 175;
+  --brand-primary: 99 102 241;
+  --brand-secondary: 139 92 246;
+  --brand-success: 34 197 94;
+  --brand-danger: 239 68 68;
+}
+
+.dark {
+  --shell: 21 24 21;
+  --panel: 30 36 31;
+  --panel-strong: 39 46 39;
+  --line: 98 111 101;
+  --accent: 121 214 201;
+  --accent-soft: 34 55 51;
+  --success: 96 224 175;
+  --danger: 238 141 126;
+  --warning: 228 185 96;
+}
+
+body {
+  font-family: "Manrope", "Satoshi", "Avenir Next", "Segoe UI", sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(99, 102, 241, 0.22), transparent 24%),
+    radial-gradient(circle at 85% 0%, rgba(139, 92, 246, 0.18), transparent 26%),
+    radial-gradient(circle at 50% 100%, rgba(34, 197, 94, 0.08), transparent 24%),
+    linear-gradient(180deg, #111827 0%, #0b0f19 100%);
+  color: #e5e7eb;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 38%),
+    radial-gradient(circle at 70% 100%, rgba(99, 102, 241, 0.08), transparent 34%);
+  z-index: -2;
+  pointer-events: none;
+}
+
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.28) transparent;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+html {
+  color-scheme: dark;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.34);
+  color: #f8fafc;
+}
