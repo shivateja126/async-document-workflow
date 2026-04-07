@@ -31,13 +31,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ✅ FIXED CORS (this is the only important change)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=["*"],  # 🔥 allows Vercel frontend to talk to Render backend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app.add_middleware(RequestContextMiddleware)
+
 register_exception_handlers(app)
+
 app.include_router(api_router)
